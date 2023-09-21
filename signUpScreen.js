@@ -1,28 +1,32 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextInput,StyleSheet, View, Button, Text } from "react-native";
-// import  signUp, { setText }  from "./DataFuntion";
+import { useState } from "react";
 
-const signUp = async(email, password) =>{
-    try {
-        const userData = { email, password };
-        await AsyncStorage.setItem('key_userData', JSON.stringify(userData));
-        console.log('Đăng ký thành công!');
-        alert("Đăng kí thành công")
-        console.log(email, password)
-    } catch (error) {
-        console.error('Lỗi khi đăng ký:', error);
-    }
-};
+
 export default function SignUpScreen(){
+    const [email, setEmail] = useState('');
+    const[password,setPassword] = useState('');
+    const signUp = async() =>{
+        try {
+            await AsyncStorage.setItem('key_email', JSON.stringify(email));
+            await AsyncStorage.setItem('key_password', JSON.stringify(password));
+
+            console.log('Đăng ký thành công!: ',email, password);
+            alert("Đăng kí thành công! \nEmail:"+email+'\nPassword:'+password)
+            console.log(email, password)
+        } catch (error) {
+            console.error('Lỗi khi đăng ký:', error);
+        }
+    }; 
     return(
         <View style={styles.container}>
             <Text style={styles.title}>Create new accout</Text>
             <TextInput style={styles.input} placeholder="Full Name"/>
             <TextInput style={styles.input} placeholder="Phone Number"/>
-            <TextInput style={styles.input} placeholder="Email Address" />
-            <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} />
+            <TextInput style={styles.input} placeholder="Email Address" onChangeText={(text)=>setEmail(text)}/>
+            <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} onChangeText={(text)=>setPassword(text)}/>
             <View style={styles.btn1}>
-                <Button title="Sign Up" color={"blue"} onPress={()=>{signUp("hieu", "hieu")}}/>
+                <Button title="Sign Up" color={"blue"} onPress={signUp}/>
             </View>
             
         </View>

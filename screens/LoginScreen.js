@@ -1,37 +1,36 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextInput,StyleSheet, View, Button, Text } from "react-native";
-// import  login  from "../DataFuntion";
+import { useState } from "react";
 
-const login = async (email, password) => {
-    try {
-      // Lấy thông tin đăng ký từ AsyncStorage
-      const userData = await AsyncStorage.getItem('key_userData');
-  
-      if (userData) {
-        const parsedUserData = JSON.parse(userData);
-  
-        // Kiểm tra thông tin đăng nhập
-        if (parsedUserData.email === email && parsedUserData.password === password) {
-          console.log('Đăng nhập thành công!');
-        } else {
-          console.log('Email hoặc mật khẩu không đúng.');
-        }
-      } else {
-        console.log('Không tìm thấy thông tin đăng ký.');
-      }
-    } catch (error) {
-      console.error('Lỗi khi đăng nhập:', error);
-    }
-};
 
 export default function LoginScreen ({navigation}) {
+    const [email, setEmail] = useState('');
+    const[password,setPassword] = useState('');
+    const login = async () => {
+        try {
+      
+            const emailData = JSON.parse(await AsyncStorage.getItem('key_email'));
+            const passwordData = JSON.parse(await AsyncStorage.getItem('key_password'));
+
+            if (emailData === email && passwordData === password) {
+              console.log('Đăng nhập thành công!');
+              alert("Đăng nhập thành công!")
+            } else {
+              console.log('Email hoặc mật khẩu không đúng.');
+              alert( "Email hoặc mật khẩu không đúng.")
+            }
+        } catch (error) {
+          console.error('Lỗi khi đăng nhập:', error);
+        }
+    };
+    
     return(
         <View style={styles.container}>
             <Text style={styles.title}>Sign In</Text>
-            <TextInput style={styles.input} placeholder="Email or phone number"/>
-            <TextInput style={styles.input} placeholder="Password" secureTextEntry={true}/>
+            <TextInput style={styles.input} placeholder="Email or phone number" onChangeText={(text)=>setEmail(text)}/>
+            <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} onChangeText={(text)=>setPassword(text)}/>
             <View style={styles.btn1}>
-                <Button title="Login" color={"#5EA33A"} onPress={()=>{login('hieu','hieu')}}/>
+                <Button title="Login" color={"#5EA33A"} onPress={login}/>
             </View>
             <Text style={styles.text}>OR</Text>
             <View style={styles.btn2}>
